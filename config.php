@@ -14,4 +14,27 @@ try {
 } catch(PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
+
+// Check if user is logged in
+function isLoggedIn() {
+    return isset($_SESSION['user_id']);
+}
+
+// Redirect if not logged in
+function requireLogin() {
+    if (!isLoggedIn()) {
+        header('Location: index.php');
+        exit();
+    }
+}
+
+// Return JSON error if not logged in (for fetch/AJAX calls)
+function requireApiLogin() {
+    if (!isLoggedIn()) {
+        http_response_code(401);
+        header('Content-Type: application/json');
+        echo json_encode(['error' => 'Unauthorized']);
+        exit();
+    }
+}
 ?>
