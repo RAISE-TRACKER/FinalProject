@@ -68,3 +68,136 @@
             </div>
         </main>
     </div>
+
+    
+
+    <script>
+        let chart;
+        let allStudents = [];
+
+        // Load students and initialize
+        async function loadChart() {
+            try {
+                const response = await fetch('get_students.php');
+                allStudents = await response.json();
+                populateSectionFilter();
+                populateTeacherFilter();
+                filterChart(); // Initial chart with all sections
+            } catch (error) {
+                console.error('Error loading chart:', error);
+            }
+        }
+
+        // Populate filter dropdown
+        function populateSectionFilter() {
+            const filter = document.getElementById('sectionFilter');
+            const sections = [...new Set(allStudents.map(s => s.section_code).filter(Boolean))];
+            
+            filter.innerHTML = '<option value="">All Sections</option>';
+            sections.forEach(section => {
+                const option = new Option(section, section);
+                filter.add(option);
+            });
+        }
+
+        function populateTeacherFilter() {
+            const filter = document.getElementById('teacherFilter');
+            const teachers = [...new Set(allStudents.map(s => s.teacher_name).filter(Boolean))];
+
+            filter.innerHTML = '<option value="">All Teachers</option>';
+            teachers.forEach(teacher => {
+                const option = new Option(teacher, teacher);
+                filter.add(option);
+            });
+        }
+
+        // Filter and update chart
+        window.filterChart = function() {
+            const selectedSection = document.getElementById('sectionFilter').value;
+            const selectedTeacher = document.getElementById('teacherFilter').value;
+            const filteredStudents = allStudents.filter(s =>
+                (selectedSection === '' || s.section_code === selectedSection) &&
+                (selectedTeacher === '' || s.teacher_name === selectedTeacher)
+            );
+
+            const ctx = document.getElementById('participationChart').getContext('2d');
+            if (chart) chart.destroy();
+
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: filteredStudents.map(s => s.name),
+                    datasets: [{
+                        label: 'Participation Score',
+                        data: filteredStudents.map(s => s.participation),
+                        backgroundColor: '#FAC846',
+                        borderColor: 'rgba(255, 125, 45, 0)',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false } 
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: { color: '#233C4B' },
+                            grid: { color: 'rgba(95, 155, 140, 0.25)' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#233C4B' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initial load
+        loadChart();
+
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const page = this.dataset.page;
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+                
+                if (page === 'students') {
+                    window.location.href = 'students.php';
+                } 
+            });
+        });
+
+        // Sidebar toggle
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+
+        sidebarToggle.addEventListener('change', function() {
+            if (this.checked) {
+                sidebar.classList.add('open');
+                mainContent.classList.add('expanded');
+            } else {
+                sidebar.classList.remove('open');
+                mainContent.classList.remove('expanded');
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', function(event) {
+            event.stopPropagation();
+            let isConfirmed = confirm("Are you sure you want to log out?");
+            if (isConfirmed) {
+                window.location.href = "logout.php";
+            }
+        });
+    </script>
+</body>
+</html>
