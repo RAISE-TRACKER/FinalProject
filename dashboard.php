@@ -1,3 +1,7 @@
+<?php 
+require_once 'config.php'; 
+requireLogin(); // Requires login
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
