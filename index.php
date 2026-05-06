@@ -40,7 +40,7 @@
                     <p>Don't have an account? <a href="#" onclick="showForm('register')">Sign up here</a></p>
                 </div>
             </div>
-            
+
             <!-- Register Form -->
             <div class="form-box" id="register">
                 <h3><i class="fas fa-user-plus"></i> Create Account</h3>
@@ -76,3 +76,14 @@
 
        
     </div>
+     <script>
+        function showForm(formId) {
+            document.querySelectorAll(".form-box").forEach(form => form.classList.remove("active"));
+            document.getElementById(formId).classList.add("active");
+            
+            // Clear previous errors
+            document.querySelectorAll('.alert').forEach(alert => alert.remove());
+        }
+    </script>
+</body>
+</html>
