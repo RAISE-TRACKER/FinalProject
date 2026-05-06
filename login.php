@@ -25,9 +25,40 @@ if (isset($_POST['register'])) {
         }
     } catch(PDOException $e) {
         $_SESSION['register_error'] = 'Registration failed. Please try again.';
-            $_SESSION['active_form'] = 'register';
-        }
+        $_SESSION['active_form'] = 'register';
+    }
 
-        header("Location: index.php");
-        exit();
-}?>
+    header("Location: index.php");
+    exit();
+}
+
+if (isset($_POST['login'])) {
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    try {
+        // Fetch user (PREPARED STATEMENT)
+        $stmt = $pdo->prepare("SELECT id, name, email, password FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['name'] = $user['name'];
+            $_SESSION['email'] = $user['email'];
+            
+            header("Location: dashboard.php");
+            exit();
+        } else {
+            $_SESSION['login_error'] = 'Incorrect email or password';
+            $_SESSION['active_form'] = 'login';
+        }
+    } catch(PDOException $e) {
+        $_SESSION['login_error'] = 'Login failed. Please try again.';
+        $_SESSION['active_form'] = 'login';
+    }
+
+    header("Location: index.php");
+    exit();
+}
+?>
