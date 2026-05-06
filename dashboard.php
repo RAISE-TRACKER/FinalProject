@@ -39,3 +39,32 @@
             <span></span>
             <span></span>
         </label>
+
+        
+        <!-- Main Content -->
+        <main class="main-content" id="main-content">
+            <div class="header">
+                <h1><i class="fas fa-chart-bar"></i> RaiseTrack: Student Participation Tracker</h1>
+                <div>
+                    Welcome, <strong><?php echo htmlspecialchars($_SESSION['name']); ?></strong> 
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h2 class="card-title">
+                    Participation Overview
+                    <div class="dashboard-card-toolbar">
+                        <select id="sectionFilter" class="filter-select" onchange="filterChart()" aria-label="Filter by section">
+                            <option value="">Loading sections...</option>
+                        </select>
+                        <select id="teacherFilter" class="filter-select" onchange="filterChart()" aria-label="Filter by teacher">
+                            <option value="">Loading teachers...</option>
+                        </select>
+                    </div>
+                </h2>
+                <div class="chart-container">
+                    <canvas id="participationChart"></canvas>
+                </div>
+            </div>
+        </main>
+    </div>
