@@ -94,3 +94,53 @@ require_once 'config.php';
             </div>
         </main>
     </div>
+    <!-- Add Student Modal -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAddModal()">&times;</span>
+            <h2>Add New Student</h2>
+            <form id="addStudentForm">
+                <div class="form-group">
+                    <label for="studentId">Student ID:</label>
+                    <input type="text" id="studentId" name="student_id" required maxlength="50">
+                </div>
+                <div class="form-group">
+                    <label for="studentName">Student Name:</label>
+                    <input type="text" id="studentName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="sectionCode">Section Code:</label>
+                    <input type="text" id="sectionCode" name="section_code" required placeholder="e.g., ICS20, ICS30" maxlength="20">
+                </div>
+                <button type="submit" class="btn btn-primary">Add Student</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Participation Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h2>Edit Participation</h2>
+            <form id="editStudentForm">
+                <input type="hidden" id="editStudentId">
+                <div class="form-group">
+                    <label>Student Name:</label>
+                    <input type="text" id="editStudentName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Student ID:</label>
+                    <input type="text" id="editStudentIdDisplay" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Section Code:</label>
+                    <input type="text" id="editSectionCode" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="editParticipation">Participation Score (0-100):</label>
+                    <input type="number" id="editParticipation" name="participation" min="0" max="100" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Participation</button>
+            </form>
+        </div>
+    </div>
