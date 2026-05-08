@@ -93,7 +93,7 @@ require_once 'config.php';
                 </div>
             </div>
         </main>
-    </div>
+    </div>git 
     <!-- Add Student Modal -->
     <div id="addModal" class="modal">
         <div class="modal-content">
@@ -144,3 +144,259 @@ require_once 'config.php';
             </form>
         </div>
     </div>
+<script>
+        let students = [];
+        let allStudents = []; // Store all students for filtering
+        let currentSectionFilter = '';
+        let currentTeacherFilter = '';
+
+        // Load students
+        async function loadStudents() {
+            try {
+                const response = await fetch('get_students.php');
+                if (!response.ok) throw new Error('Failed to fetch students');
+                allStudents = await response.json();
+                students = [...allStudents];
+                displayStudents();
+                populateSectionFilter();
+                populateTeacherFilter();
+                applyCurrentFilters();
+            } catch (error) {
+                console.error('Error loading students:', error);
+                alert('Error loading students. Please refresh the page.');
+            }
+        }
+
+        function populateSectionFilter() {
+            const sectionFilter = document.getElementById('sectionFilter');
+            const sections = [...new Set(allStudents.map(student => student.section_code).filter(code => code && code.trim() !== ''))].sort();
+            
+            // Clear existing options except first one
+            sectionFilter.innerHTML = '<option value="">All Sections</option>';
+            
+            // Add section options
+            sections.forEach(section => {
+                const option = document.createElement('option');
+                option.value = section;
+                option.textContent = section;
+                sectionFilter.appendChild(option);
+            });
+        }
+
+        function populateTeacherFilter() {
+            const teacherFilter = document.getElementById('teacherFilter');
+            const teachers = [...new Set(allStudents.map(student => student.teacher_name).filter(name => name && name.trim() !== ''))].sort();
+
+            teacherFilter.innerHTML = '<option value="">All Teachers</option>';
+
+            teachers.forEach(teacher => {
+                const option = document.createElement('option');
+                option.value = teacher;
+                option.textContent = teacher;
+                teacherFilter.appendChild(option);
+            });
+        }
+
+        function displayStudents(filteredStudents = students) {
+            const tbody = document.getElementById('studentsTableBody');
+            if (filteredStudents.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="table-empty-message">No students found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = filteredStudents.map(student => `
+                <tr>
+                    <td>${student.id || ''}</td>
+                    <td>${student.student_id || ''}</td>
+                    <td>${student.name || ''}</td>
+                    <td>${student.section_code || ''}</td>
+                    <td>${student.participation || 0}</td>
+                    <td>${student.teacher_name || ''}</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm" onclick="editStudent(${student.id})" title="Edit">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="deleteStudent(${student.id})" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Filter students by section and teacher
+        function filterStudents() {
+            const selectedSection = document.getElementById('sectionFilter').value;
+            const selectedTeacher = document.getElementById('teacherFilter').value;
+            currentSectionFilter = selectedSection;
+            currentTeacherFilter = selectedTeacher;
+
+            students = allStudents.filter(student =>
+                (selectedSection === '' || student.section_code === selectedSection) &&
+                (selectedTeacher === '' || student.teacher_name === selectedTeacher)
+            );
+
+            displayStudents(students);
+        }
+
+        function applyCurrentFilters() {
+            const sectionFilter = document.getElementById('sectionFilter');
+            const teacherFilter = document.getElementById('teacherFilter');
+
+            if (currentSectionFilter && sectionFilter.querySelector(`option[value="${currentSectionFilter}"]`)) {
+                sectionFilter.value = currentSectionFilter;
+            }
+            if (currentTeacherFilter && teacherFilter.querySelector(`option[value="${currentTeacherFilter}"]`)) {
+                teacherFilter.value = currentTeacherFilter;
+            }
+            filterStudents();
+        }
+
+        // Add student
+        document.getElementById('addStudentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('student_id', document.getElementById('studentId').value.trim());
+            formData.append('name', document.getElementById('studentName').value.trim());
+            formData.append('section_code', document.getElementById('sectionCode').value.trim().toUpperCase());
+
+            try {
+                const response = await fetch('add_student.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok && result.success) {
+                    closeAddModal();
+                    loadStudents(); // Refresh data and filter options
+                } else {
+                    alert(result.error || 'Error adding student');
+                }
+            } catch (error) {
+                console.error('Error adding student:', error);
+                alert('Error adding student. Please try again.');
+            }
+        });
+
+        // Edit student
+        window.editStudent = function(id) {
+            const student = allStudents.find(s => s.id == id); // Use allStudents to ensure we find it
+            if (student) {
+                document.getElementById('editStudentId').value = student.id;
+                document.getElementById('editStudentName').value = student.name || '';
+                document.getElementById('editStudentIdDisplay').value = student.student_id || '';
+                document.getElementById('editSectionCode').value = student.section_code || '';
+                document.getElementById('editParticipation').value = student.participation || 0;
+                document.getElementById('editModal').style.display = 'block';
+            }
+        }
+
+        document.getElementById('editStudentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('id', document.getElementById('editStudentId').value);
+            formData.append('participation', document.getElementById('editParticipation').value);
+
+            try {
+                const response = await fetch('update_student.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    closeEditModal();
+                    loadStudents();
+                } else {
+                    alert('Error updating student');
+                }
+            } catch (error) {
+                console.error('Error updating student:', error);
+                alert('Error updating student');
+            }
+        });
+
+        // Delete student
+        window.deleteStudent = async function(id) {
+            if (confirm('Are you sure you want to delete this student?')) {
+                try {
+                    const response = await fetch(`delete_student.php?id=${id}`, { 
+                        method: 'DELETE' 
+                    });
+                    if (response.ok) {
+                        loadStudents(); // Refresh data and filter options
+                    } else {
+                        alert('Error deleting student');
+                    }
+                } catch (error) {
+                    console.error('Error deleting student:', error);
+                    alert('Error deleting student');
+                }
+            }
+        }
+
+        // Modal functions
+        function openAddModal() {
+            document.getElementById('addModal').style.display = 'block';
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').style.display = 'none';
+            document.getElementById('studentId').value = '';
+            document.getElementById('studentName').value = '';
+            document.getElementById('sectionCode').value = '';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const addModal = document.getElementById('addModal');
+            const editModal = document.getElementById('editModal');
+            if (event.target == addModal) closeAddModal();
+            if (event.target == editModal) closeEditModal();
+        }
+
+        // Navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const page = this.dataset.page;
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+                
+                if (page === 'dashboard') {
+                    window.location.href = 'dashboard.php';
+                } else if (page === 'logout') {
+                    if (confirm('Are you sure you want to log out?')) {
+                        window.location.href = 'logout.php';
+                    }
+                }
+            });
+        });
+
+        // Sidebar toggle
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('change', function() {
+                if (this.checked) {
+                    sidebar.classList.add('open');
+                    mainContent.classList.add('expanded');
+                } else {
+                    sidebar.classList.remove('open');
+                    mainContent.classList.remove('expanded');
+                }
+            });
+        }
+
+        // Initial load
+        loadStudents();
+    </script>
+</body>
+</html>
