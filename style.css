@@ -389,3 +389,233 @@ input[readonly] {
     color: #1f1f1f;
     font-size: 1.35em;
 }
+
+
+.close {
+    position: absolute;
+    top: 14px;
+    right: 18px;
+    color: #8c7225;
+    cursor: pointer;
+    font-size: 28px;
+    line-height: 1;
+    transition: color 0.2s ease;
+}
+
+.close:hover {
+    color: var(--active-yellow);
+}
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at top right, var(--soft-yellow-bg) 0%, transparent 44%),
+        linear-gradient(145deg, #212121 0%, #2e2e2e 100%);
+}
+
+.login-container {
+    width: 100%;
+    max-width: 480px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    width: 100%;
+    padding: 40px 36px;
+    border-radius: var(--radius-lg);
+    background: #ffffff;
+    border: 1px solid var(--border);
+    box-shadow: 0 26px 48px rgba(0, 0, 0, 0.24);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-yellow), var(--hover-yellow), var(--active-yellow));
+}
+
+.login-header {
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+.login-header i {
+    display: block;
+    margin-bottom: 15px;
+    font-size: 3em;
+    color: var(--primary-yellow);
+}
+
+.login-header h1 {
+    margin-bottom: 10px;
+    font-size: 1.85em;
+    color: #222;
+}
+
+.login-header p {
+    color: #6a6a6a;
+}
+
+.form-box {
+    display: none;
+}
+
+.form-box.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-box h3 {
+    margin-bottom: 20px;
+    font-size: 1.45em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-box h3 i {
+    color: var(--active-yellow);
+}
+
+.login-page input[type="text"],
+.login-page input[type="email"],
+.login-page input[type="password"] {
+    border-color: var(--border);
+}
+
+.login-page input:focus {
+    border-color: var(--hover-yellow);
+    box-shadow: 0 0 0 3px var(--soft-yellow-bg);
+}
+
+.alert {
+    margin-bottom: 20px;
+    padding: 14px 18px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    font-weight: 500;
+}
+
+.alert-danger {
+    background: #fff1ef;
+    color: #8b2e1a;
+    border-color: #f3b1a4;
+}
+
+.alert-success {
+    background: var(--soft-yellow-bg);
+    color: #4f3b06;
+    border-color: var(--border);
+}
+
+.full-width {
+    width: 100%;
+}
+
+.form-links {
+    margin-top: 22px;
+    padding-top: 22px;
+    text-align: center;
+    border-top: 1px solid rgba(250, 200, 70, 0.35);
+}
+
+.form-links a {
+    color: #8c7225;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.form-links a:hover {
+    color: var(--active-yellow);
+    text-decoration: underline;
+}
+
+.demo-info {
+    padding: 30px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: var(--shadow-card);
+    backdrop-filter: blur(10px);
+}
+
+.demo-info p {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.demo-info strong {
+    color: #8c7225;
+}
+
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding-top: 72px;
+    }
+
+    .main-content.expanded {
+        margin-left: 0;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    th,
+    td {
+        padding: 10px 8px;
+        font-size: 14px;
+    }
+
+    .login-container {
+        padding: 12px;
+    }
+
+    .login-card {
+        padding: 28px 22px;
+    }
+
+    .card-title {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .header {
+        padding: 18px 20px;
+    }
+
+    .header h1 {
+        font-size: 1.35em;
+    }
+}
