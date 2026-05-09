@@ -1,0 +1,29 @@
+:root {
+    --primary-yellow: #FAC846;
+    --hover-yellow: #e6b63d;
+    --active-yellow: #d4a72f;
+    --soft-yellow-bg: rgba(250, 200, 70, 0.15);
+    --ink: #2b2b2b;
+    --muted-ink: #5f5f5f;
+    --surface: #ffffff;
+    --surface-soft: #fff9ea;
+    --border: #f3d98d;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --shadow-card: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --shadow-btn: 0 6px 18px rgba(250, 200, 70, 0.35);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--ink);
+    background: linear-gradient(180deg, #fffdf7 0%, var(--soft-yellow-bg) 100%);
+}
