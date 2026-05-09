@@ -1,5 +1,6 @@
 <?php 
 require_once 'config.php'; 
+requireLogin(); // Requires login
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -155,7 +156,7 @@ require_once 'config.php';
         // Load students
         async function loadStudents() {
             try {
-                const response = await fetch('get_student.php');
+                const response = await fetch('get_students.php');
                 if (!response.ok) throw new Error('Failed to fetch students');
                 allStudents = await response.json();
                 students = [...allStudents];

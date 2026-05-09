@@ -79,7 +79,7 @@ requireLogin(); // Requires login
         // Load students and initialize
         async function loadChart() {
             try {
-                const response = await fetch('get_student.php');
+                const response = await fetch('get_students.php');
                 allStudents = await response.json();
                 populateSectionFilter();
                 populateTeacherFilter();
