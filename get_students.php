@@ -2,6 +2,11 @@
 require_once 'config.php';
 header('Content-Type: application/json');
 
+/*
+JOIN is used to combine students with their teacher information.
+It links students.teacher_id to users.id so we can get teacher details (name and email) for each student in one query.
+*/
+
 try {
     $stmt = $pdo->prepare("
         SELECT
