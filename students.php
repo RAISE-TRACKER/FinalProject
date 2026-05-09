@@ -93,7 +93,8 @@ require_once 'config.php';
                 </div>
             </div>
         </main>
-    </div>git 
+    </div>
+
     <!-- Add Student Modal -->
     <div id="addModal" class="modal">
         <div class="modal-content">
@@ -144,7 +145,8 @@ require_once 'config.php';
             </form>
         </div>
     </div>
-<script>
+
+    <script>
         let students = [];
         let allStudents = []; // Store all students for filtering
         let currentSectionFilter = '';
@@ -153,7 +155,7 @@ require_once 'config.php';
         // Load students
         async function loadStudents() {
             try {
-                const response = await fetch('get_students.php');
+                const response = await fetch('get_student.php');
                 if (!response.ok) throw new Error('Failed to fetch students');
                 allStudents = await response.json();
                 students = [...allStudents];

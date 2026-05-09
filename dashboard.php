@@ -44,7 +44,6 @@ requireLogin(); // Requires login
             <span></span>
         </label>
 
-        
         <!-- Main Content -->
         <main class="main-content" id="main-content">
             <div class="header">
@@ -73,8 +72,6 @@ requireLogin(); // Requires login
         </main>
     </div>
 
-    
-
     <script>
         let chart;
         let allStudents = [];
@@ -82,7 +79,7 @@ requireLogin(); // Requires login
         // Load students and initialize
         async function loadChart() {
             try {
-                const response = await fetch('get_students.php');
+                const response = await fetch('get_student.php');
                 allStudents = await response.json();
                 populateSectionFilter();
                 populateTeacherFilter();
